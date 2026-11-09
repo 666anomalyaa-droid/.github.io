@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dce9e9"/><stop offset="1" stop-color="#b8c9d7"/></linearGradient></defs>
+  <rect width="900" height="675" fill="url(#g)"/>
+  <circle cx="730" cy="120" r="95" fill="#d7b778" fill-opacity=".7"/>
+  <path d="M0 490 L235 270 L390 430 L575 220 L900 505 V675 H0Z" fill="#718b99" fill-opacity=".55"/>
+  <path d="M0 555 L230 390 L430 560 L625 365 L900 590 V675 H0Z" fill="#243b55" fill-opacity=".6"/>
+  <text x="450" y="620" fill="#ffffff" font-family="Arial,sans-serif" font-size="20" letter-spacing="6" text-anchor="middle">YOUR HIGHLIGHT PHOTO</text>
+</svg>
