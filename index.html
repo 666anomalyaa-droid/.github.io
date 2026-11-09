@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="H-Rua!! Official Profile - 時は金なり。バイク・ゲーム・音楽・日々の活動を紹介する個人サイト。">
+  <meta name="theme-color" content="#10090c">
+  <title>H-Rua!! | Official Profile</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="gate-locked">
+
+  <!-- ========================= SLOT GATE / PROFILE ENTRY =========================
+       最初に表示するスロット演出。プロフィール本体は777でゲートが開くまで非表示です。
+       画像を差し替える場合は assets/slot-gate.jpg を変更してください。
+       ============================================================================ -->
+  <section class="slot-gate" id="slotGate" role="dialog" aria-modal="true" aria-labelledby="slotGateTitle">
+    <img class="slot-gate-background" src="assets/slot-gate.jpg" alt="" aria-hidden="true">
+    <div class="slot-gate-shade" aria-hidden="true"></div>
+
+    <!-- 勝利時に左右へ開くVIPゲート -->
+    <div class="slot-door slot-door-left" aria-hidden="true"></div>
+    <div class="slot-door slot-door-right" aria-hidden="true"></div>
+
+    <div class="slot-gate-content">
+      <p class="slot-gate-eyebrow">H-RUA!! / PRIVATE ENTRY</p>
+      <h1 id="slotGateTitle">THE JACKPOT GATE</h1>
+      <p class="slot-gate-copy">運命の777を揃えて、プロフィールの扉を開け。</p>
+      <div class="coin-access-panel" id="coinAccessPanel">
+        <label for="entryPasscode">4桁の暗号を入力してコインを獲得</label>
+        <div class="coin-access-controls">
+          <input id="entryPasscode" type="password" inputmode="numeric" autocomplete="off"
+                 maxlength="4" pattern="[0-9]{4}" placeholder="● ● ● ●" aria-label="4桁の入場コード">
+          <button id="coinUnlockButton" type="button">コインを獲得</button>
+        </div>
+        <p class="coin-access-status" id="coinAccessStatus" role="status" aria-live="polite">4桁の暗号が一致するとコインが手に入る。</p>
+      </div>
+      <div class="coin-token" id="coinToken" hidden aria-live="polite">
+        <span class="coin-token-disc">＄</span>
+        <span>COIN ACQUIRED</span>
+      </div>
+
+      <!-- 3つのリール表示。タップで回転し、結果はJavaScriptで決まります。 -->
+      <div class="slot-machine-display" aria-label="スロットマシン">
+        <div class="slot-reel" id="slotReel1"><span>7</span></div>
+        <div class="slot-reel" id="slotReel2"><span>7</span></div>
+        <div class="slot-reel" id="slotReel3"><span>7</span></div>
+      </div>
+
+      <div class="slot-gate-actions">
+        <button class="slot-spin-button" id="slotSpinButton" type="button" hidden disabled>
+          <span class="slot-button-icon" aria-hidden="true">♦</span>
+          <span id="slotButtonLabel">TAP TO SPIN</span>
+        </button>
+        <button class="slot-enter-button" id="slotEnterButton" type="button" hidden>
+          ENTER PROFILE <span aria-hidden="true">↗</span>
+        </button>
+        <p class="slot-gate-status" id="slotGateStatus" role="status" aria-live="polite">
+          タップしてスロットを回そう。
+        </p>
+        <p class="slot-gate-odds">JACKPOT 90% <span>／</span> RETRY 10%</p>
+      </div>
+      <p class="slot-gate-footer">TIME IS MONEY. &nbsp; GOOD LUCK.</p>
+    </div>
+  </section>
+
+  <!-- キーボード操作の人が本文へ移動しやすくするためのリンク -->
+  <a class="skip-link" href="#main">本文へスキップ</a>
+
+  <!-- ========================= ヘッダー ========================= -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="ページ先頭へ">
+        <span class="brand-mark">HR</span>
+        <span class="brand-name" id="brandName">YOUR NAME</span>
+      </a>
+
+      <!-- PCでは横並び、スマホではメニューボタンで開閉 -->
+      <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="siteNav">
+        <span></span><span></span><span></span>
+        <span class="sr-only">メニューを開く</span>
+      </button>
+      <nav class="site-nav" id="siteNav" aria-label="メインメニュー">
+        <a class="coin-shortcut" href="#about">ABOUT</a>
+        <a class="coin-shortcut" href="#profile">PROFILE</a>
+        <a class="coin-shortcut" href="#skills">INTERESTS</a>
+        <a class="coin-shortcut" href="#bike">BIKE</a>
+        <a class="coin-shortcut" href="#games">GAMES</a>
+        <a class="coin-shortcut" href="#music">MUSIC</a>
+        <a class="coin-shortcut" href="#links">LINKS</a>
+        <a class="coin-shortcut" href="#updates">NEWS</a>
+        <a class="coin-shortcut" href="#gallery">GALLERY</a>
+        <a class="nav-contact coin-shortcut" href="#guestbook">MESSAGE</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ========================= ファーストビュー ========================= -->
+    <section class="hero section-shell" id="top">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span> PERSONAL PORTFOLIO / ONLINE PROFILE</p>
+        <p class="hero-kicker" id="heroKicker">WELCOME TO MY PAGE</p>
+        <h1><span id="heroName">H-Rua!!</span><small id="heroNameEn">H-RUA / PERSONAL PROFILE</small></h1>
+        <p class="hero-lead" id="heroCatchcopy">自分の活動・好きなこと・これまでの歩みをまとめた、個人プロフィールサイトです。</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#profile">プロフィールを見る <span aria-hidden="true">↘</span></a>
+          <a class="text-link" href="#gallery">HIGHLIGHTS <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="hero-meta">
+          <span><i class="status-dot"></i><span id="heroStatus">OPEN TO CONNECTION</span></span>
+          <span id="heroLocation">TOKYO, JAPAN</span>
+        </div>
+      </div>
+
+      <!-- 写真は assets/profile-placeholder.svg を自分の写真に差し替え -->
+      <div class="hero-visual">
+        <div class="portrait-frame">
+          <img id="profileImage" src="assets/profile-placeholder.svg" alt="プロフィール写真">
+          <div class="portrait-label"><span>PROFILE / 01</span><span id="portraitName">YOUR NAME</span></div>
+        </div>
+        <div class="hero-stamp" aria-hidden="true"><span>MY</span><strong>STORY</strong><span>EST. 2006</span></div>
+        <div class="hero-side-note" aria-hidden="true">A LITTLE ABOUT ME — SCROLL TO EXPLORE</div>
+      </div>
+    </section>
+
+    <!-- ========================= ABOUT ========================= -->
+    <section class="section section-about" id="about">
+      <div class="section-shell about-grid">
+        <div class="section-heading">
+          <p class="eyebrow">01 / ABOUT</p>
+          <h2>はじめまして。<br><span>私について。</span></h2>
+        </div>
+        <div class="about-content">
+          <p class="about-message" id="aboutMessage">ここに自己紹介を書きます。どんなことに興味があり、何を大切にしているのか、自分らしい言葉で紹介してみましょう。</p>
+          <div class="about-tags" id="aboutTags" aria-label="キーワード"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= PROFILE / RESUME ========================= -->
+    <section class="section section-light" id="profile">
+      <div class="section-shell">
+        <div class="section-heading section-heading-row">
+          <div><p class="eyebrow">02 / PROFILE</p><h2>プロフィール<span class="heading-en">PROFILE</span></h2></div>
+          <p class="section-note">名刺のように、必要な情報をひと目で。</p>
+        </div>
+
+        <div class="profile-card">
+          <div class="profile-card-top">
+            <div>
+              <p class="card-label">PERSONAL DATA</p>
+              <h3 id="profileFullName">YOUR NAME</h3>
+              <p class="profile-subtitle" id="profileSubtitle">肩書き・所属などを入力</p>
+            </div>
+            <div class="profile-card-number">NO. <span>001</span></div>
+          </div>
+          <div class="profile-details" id="profileDetails">
+            <!-- js/site-data.js の profile.details から自動で表示 -->
+          </div>
+          <div class="profile-card-bottom">
+            <span id="profileLocation">TOKYO, JAPAN</span>
+            <span id="profileMotto">MAKE EVERY DAY COUNT.</span>
+          </div>
+        </div>
+
+        <div class="resume-grid">
+          <article class="resume-panel">
+            <p class="eyebrow">EDUCATION / CAREER</p>
+            <h3>学歴・経歴</h3>
+            <div class="timeline" id="careerTimeline"></div>
+          </article>
+          <article class="resume-panel">
+            <p class="eyebrow">LICENSE / CERTIFICATE</p>
+            <h3>資格・取得実績</h3>
+            <ul class="certificate-list" id="certificateList"></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= SKILLS ========================= -->
+    <section class="section section-dark" id="skills">
+      <div class="section-shell">
+        <div class="section-heading section-heading-row">
+          <div><p class="eyebrow">03 / SKILLS & INTERESTS</p><h2>できること・好きなこと<span class="heading-en">MY FIELD</span></h2></div>
+          <p class="section-note">今の自分をつくっているスキルと興味。</p>
+        </div>
+        <div class="skills-grid" id="skillsGrid"></div>
+      </div>
+    </section>
+
+    <!-- ========================= BIKE STORY ========================= -->
+    <section class="section hobby-section" id="bike">
+      <div class="section-shell">
+        <div class="section-heading section-heading-row">
+          <div><p class="eyebrow">04 / BIKE LIFE</p><h2>憧れを、現実に。<span class="heading-en">ROAD TO REBEL</span></h2></div>
+          <p class="section-note">いつか乗りたいと思っていたバイクへ。</p>
+        </div>
+        <div class="hobby-feature">
+          <div class="hobby-feature-mark">BIKE<br><strong>01</strong></div>
+          <div><h3>Honda Rebel 250</h3><p id="bikeIntro"></p><p class="muted-note" id="bikeNote"></p></div>
+        </div>
+        <div class="hobby-timeline" id="bikeTimeline"></div>
+      </div>
+    </section>
+
+    <!-- ========================= GAME HISTORY ========================= -->
+    <section class="section section-dark hobby-section game-history-section" id="games">
+      <div class="section-shell">
+        <div class="section-heading section-heading-row">
+          <div><p class="eyebrow">05 / GAME HISTORY</p><h2>PLAY / RANK / REPEAT<span class="heading-en">GAMING RECORD</span></h2></div>
+          <p class="section-note">これまでのランク実績と、今も遊んでいるタイトル。</p>
+        </div>
+        <div class="game-status-groups" id="gameStatusGroups">
+          <!-- js/main.js が活動状況ごとの3グループを生成します。 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= MUSIC TOP 10 ========================= -->
+    <section class="section hobby-section music-section" id="music">
+      <div class="section-shell">
+        <div class="section-heading section-heading-row">
+          <div><p class="eyebrow">06 / SOUNDTRACK</p><h2>お気に入りの音楽<span class="heading-en">SPOTIFY TOP 10</span></h2></div>
+          <p class="section-note">よく聴く楽曲をランキングで紹介。</p>
+        </div>
+        <div class="music-ranking" id="musicRanking"></div>
+      </div>
+    </section>
+
+    <!-- ========================= SOCIAL LINKS ========================= -->
+    <section class="section section-light" id="links">
+      <div class="section-shell">
+        <div class="section-heading section-heading-row">
+          <div><p class="eyebrow">07 / FIND ME</p><h2>各種リンク<span class="heading-en">SOCIAL & WEB</span></h2></div>
+          <p class="section-note">SNS・作品・活動場所はこちら。</p>
+        </div>
+        <div class="social-grid" id="socialGrid"></div>
+      </div>
+    </section>
+
+    <!-- ========================= NEWS / OWNER POSTS ========================= -->
+    <section class="section section-news" id="updates">
+      <div class="section-shell">
+        <div class="section-heading section-heading-row">
+          <div><p class="eyebrow">08 / LATEST UPDATES</p><h2>お知らせ・近況<span class="heading-en">NEWS & JOURNAL</span></h2></div>
+          <a class="text-link" href="admin.html">管理者ログイン <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="section-intro">日々の出来事、活動報告、サイトの更新情報などを掲載します。</p>
+        <div class="news-list" id="newsList" aria-live="polite">
+          <p class="empty-message">お知らせを読み込んでいます...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= GALLERY ========================= -->
+    <section class="section section-gallery" id="gallery">
+      <div class="section-shell">
+        <div class="section-heading section-heading-row">
+          <div><p class="eyebrow">06 / HIGHLIGHT SCENES</p><h2>ハイライトギャラリー<span class="heading-en">MOMENTS</span></h2></div>
+          <div class="gallery-controls">
+            <button class="circle-button" id="galleryPrev" type="button" aria-label="前の写真へ">←</button>
+            <button class="circle-button" id="galleryNext" type="button" aria-label="次の写真へ">→</button>
+          </div>
+        </div>
+        <p class="section-intro">今日の出来事や思い出を、写真・動画で残していきます。</p>
+        <div class="gallery-track" id="galleryTrack" tabindex="0" aria-label="横スクロールできる写真ギャラリー">
+          <!-- js/site-data.js の gallery からカードを自動表示 -->
+        </div>
+        <p class="gallery-hint">DRAG / SWIPE / SCROLL TO EXPLORE　<span aria-hidden="true">→</span></p>
+      </div>
+    </section>
+
+    <!-- ========================= GUESTBOOK ========================= -->
+    <section class="section section-light" id="guestbook">
+      <div class="section-shell">
+        <div class="section-heading section-heading-row">
+          <div><p class="eyebrow">10 / GUESTBOOK</p><h2>メッセージを残す<span class="heading-en">SAY HELLO</span></h2></div>
+          <p class="section-note">感想やひとこと、お気軽にどうぞ。</p>
+        </div>
+
+        <div class="guestbook-grid">
+          <form class="guest-form" id="guestForm">
+            <label for="guestName">お名前・ニックネーム <span class="required-label">必須</span></label>
+            <input id="guestName" name="display_name" type="text" maxlength="30" placeholder="例：ゲストさん" autocomplete="nickname" required>
+
+            <label for="guestContent">メッセージ <span class="required-label">必須</span></label>
+            <textarea id="guestContent" name="content" rows="5" maxlength="500" placeholder="メッセージを入力してください（500文字以内）" required></textarea>
+
+            <!-- スパム投稿を減らすための簡易ハニーポット。通常の訪問者には見えません。 -->
+            <div class="honeypot" aria-hidden="true">
+              <label for="guestWebsite">この欄は入力しないでください</label>
+              <input id="guestWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
+            <button class="button button-primary button-wide" type="submit" id="guestSubmit">メッセージを送信する <span aria-hidden="true">→</span></button>
+            <p class="form-note" id="guestFormNote">投稿内容は管理者の確認後に公開されます。個人情報や公開したくない内容は入力しないでください。</p>
+            <p class="form-status" id="guestFormStatus" role="status" aria-live="polite"></p>
+          </form>
+
+          <div class="guest-messages">
+            <div class="guest-messages-heading"><h3>VISITOR MESSAGES</h3><span class="message-count" id="messageCount">0 messages</span></div>
+            <div class="message-list" id="messageList" aria-live="polite">
+              <p class="empty-message">コメントを読み込んでいます...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= FOOTER ========================= -->
+    <section class="closing-band">
+      <div class="section-shell closing-inner">
+        <p class="eyebrow">THANK YOU FOR VISITING</p>
+        <div class="closing-message-row">
+          <p class="closing-copy">また、いつでも<br><span>遊びに来てください。</span></p>
+          <button class="gogo-chance" id="gogoChance" type="button"
+                  aria-label="ゴーゴーチャンス。クリックすると画像が明るくなり、確定告知音が鳴ります。"
+                  aria-pressed="false" title="ゴーゴーチャンス">
+            <img src="assets/gogo-chance.webp" alt="" aria-hidden="true" decoding="async">
+          </button>
+        </div>
+        <a class="button button-outline" href="#top">ページの先頭へ ↑</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="section-shell footer-inner">
+      <a class="brand footer-brand" href="#top"><span class="brand-mark">HR</span><span class="brand-name" id="footerBrandName">H-Rua!!</span></a>
+      <p>© <span id="currentYear"></span> <span id="footerName">YOUR NAME</span>. All Rights Reserved.</p>
+      <a class="footer-admin-link" href="admin.html">管理者ページ</a>
+    </div>
+  </footer>
+
+
+  <!-- プロフィール閲覧中のBGM。slot-gateを通過したユーザー操作後に再生します。 -->
+  <audio id="profileBgm" loop preload="none">
+    <source src="assets/audio/bad-piggies-theme.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="gogoChanceAudio" preload="none">
+    <source src="assets/audio/gogo-confirm.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- 常時表示の日本時間リアルタイム時計 -->
+  <aside class="jst-clock" id="jstClock" aria-label="日本時間のリアルタイム時計">
+    <div class="jst-clock-kicker"><span class="jst-clock-live-dot" aria-hidden="true"></span> JAPAN STANDARD TIME</div>
+    <div class="jst-clock-main">
+      <time id="jstClockTime" datetime="">--:--:--</time>
+      <span class="jst-clock-period" id="jstClockPeriod">時間を確認中</span>
+    </div>
+    <div class="jst-clock-date" id="jstClockDate">日本時間を読み込み中...</div>
+  </aside>
+
+  <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false" hidden>
+    <span class="bgm-toggle-icon" aria-hidden="true">♫</span>
+    <span id="bgmToggleLabel">BGM OFF</span>
+  </button>
+
+  <!-- 外部ライブラリ（Supabase）を読み込み。DB設定が未完了でもトップページは表示できます。 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- 設定ファイル → 表示内容 → DB接続 → ページの動作、の順に読み込みます。 -->
+  <script src="js/config.js"></script>
+  <script src="js/site-data.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/main.js"></script>
+  <!-- トップページに入る前のスロットゲート -->
+  <script src="js/slot-gate.js"></script>
+</body>
+</html>
