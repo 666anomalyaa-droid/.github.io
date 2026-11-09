@@ -50,6 +50,7 @@
     loginArea.hidden = true;
     dashboard.hidden = false;
     byId("adminUserLabel").textContent = `ログイン中：${user.email || "管理者"}`;
+    loadLinkSettings();
     loadAnnouncements();
     loadComments();
   }
@@ -97,6 +98,80 @@
     } else {
       showLogin();
     }
+  }
+
+
+  // --- 外部リンクの公開／非公開管理 ---
+  // 初期行は sql/link-settings-migration.sql で作成します。
+  // 非公開にするとプロフィール側のリンクを無効化し、鍵マークを表示します。
+  async function loadLinkSettings() {
+    const list = byId("adminLinkSettings");
+    if (!list) return;
+    list.replaceChildren(makeElement("p", "empty-message", "読み込み中..."));
+
+    const links = (window.SITE_CONTENT && window.SITE_CONTENT.socialLinks) || [];
+    const { data, error } = await db
+      .from("site_link_settings")
+      .select("link_key, is_public");
+
+    list.replaceChildren();
+    if (error) {
+      list.append(makeElement(
+        "p",
+        "empty-message is-error",
+        "リンク設定を取得できません。Supabase SQL Editorで sql/link-settings-migration.sql を実行してください。"
+      ));
+      setStatus("linkSettingsStatus", "リンク設定テーブルが未作成、または管理者権限がありません。", true);
+      console.error("リンク設定取得エラー:", error.message);
+      return;
+    }
+
+    const settings = {};
+    (data || []).forEach((row) => { settings[row.link_key] = row.is_public; });
+
+    if (!links.length) {
+      list.append(makeElement("p", "empty-message", "リンクデータがありません。js/site-data.js を確認してください。"));
+      return;
+    }
+
+    links.forEach((item) => {
+      const key = item.key;
+      const isPublic = settings[key] !== false;
+      const row = makeElement("article", "admin-link-record");
+      const info = makeElement("div", "admin-link-info");
+      info.append(makeElement("strong", "", item.name));
+      info.append(makeElement("small", "", item.handle || ""));
+      info.append(makeElement("span", `admin-link-state ${isPublic ? "is-public" : "is-private"}`, isPublic ? "公開中" : "非公開"));
+
+      const toggle = makeElement("button", `small-button ${isPublic ? "danger" : ""}`, isPublic ? "非公開にする" : "公開する");
+      toggle.type = "button";
+      toggle.disabled = false;
+      toggle.addEventListener("click", () => updateLinkVisibility(key, !isPublic, item.name, toggle));
+      row.append(info, toggle);
+      list.append(row);
+    });
+    setStatus("linkSettingsStatus", "リンク公開設定を読み込みました。");
+  }
+
+  async function updateLinkVisibility(key, isPublic, displayName, button) {
+    button.disabled = true;
+    setStatus("linkSettingsStatus", `${displayName} の設定を更新中...`);
+    const { error } = await db
+      .from("site_link_settings")
+      .upsert({
+        link_key: key,
+        is_public: isPublic,
+        updated_at: new Date().toISOString()
+      }, { onConflict: "link_key" });
+
+    button.disabled = false;
+    if (error) {
+      setStatus("linkSettingsStatus", "更新できませんでした。SQL設定と管理者権限を確認してください。", true);
+      console.error("リンク公開設定更新エラー:", error.message);
+      return;
+    }
+    setStatus("linkSettingsStatus", `${displayName} を${isPublic ? "公開" : "非公開"}にしました。`);
+    loadLinkSettings();
   }
 
   // --- お知らせ一覧を取得 ---
@@ -304,6 +379,7 @@
   }
 
   // 各一覧の再読み込みボタン
+  byId("refreshLinkSettings").addEventListener("click", loadLinkSettings);
   byId("refreshAnnouncements").addEventListener("click", loadAnnouncements);
   byId("refreshComments").addEventListener("click", loadComments);
 

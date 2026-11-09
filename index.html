@@ -3,13 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="プロフィール、活動記録、作品などを掲載する個人ホームページです。">
+  <meta name="description" content="H-Rua!! Official Profile - 時は金なり。バイク・ゲーム・音楽・日々の活動を紹介する個人サイト。">
   <meta name="theme-color" content="#10090c">
-  <title>YOUR NAME | Personal Portfolio</title>
+  <title>H-Rua!! | Official Profile</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="gate-locked">
+
+  <!-- ========================= SLOT GATE / PROFILE ENTRY =========================
+       最初に表示するスロット演出。プロフィール本体は777でゲートが開くまで非表示です。
+       画像を差し替える場合は assets/slot-gate.jpg を変更してください。
+       ============================================================================ -->
+  <section class="slot-gate" id="slotGate" role="dialog" aria-modal="true" aria-labelledby="slotGateTitle">
+    <img class="slot-gate-background" src="assets/slot-gate.jpg" alt="" aria-hidden="true">
+    <div class="slot-gate-shade" aria-hidden="true"></div>
+
+    <!-- 勝利時に左右へ開くVIPゲート -->
+    <div class="slot-door slot-door-left" aria-hidden="true"></div>
+    <div class="slot-door slot-door-right" aria-hidden="true"></div>
+
+    <div class="slot-gate-content">
+      <p class="slot-gate-eyebrow">H-RUA!! / PRIVATE ENTRY</p>
+      <h1 id="slotGateTitle">THE JACKPOT GATE</h1>
+      <p class="slot-gate-copy">運命の777を揃えて、プロフィールの扉を開け。</p>
+      <div class="coin-access-panel" id="coinAccessPanel">
+        <label for="entryPasscode">4桁の暗号を入力してコインを獲得</label>
+        <div class="coin-access-controls">
+          <input id="entryPasscode" type="password" inputmode="numeric" autocomplete="off"
+                 maxlength="4" pattern="[0-9]{4}" placeholder="● ● ● ●" aria-label="4桁の入場コード">
+          <button id="coinUnlockButton" type="button">コインを獲得</button>
+        </div>
+        <p class="coin-access-status" id="coinAccessStatus" role="status" aria-live="polite">4桁の暗号が一致するとコインが手に入る。</p>
+      </div>
+      <div class="coin-token" id="coinToken" hidden aria-live="polite">
+        <span class="coin-token-disc">＄</span>
+        <span>COIN ACQUIRED</span>
+      </div>
+
+      <!-- 3つのリール表示。タップで回転し、結果はJavaScriptで決まります。 -->
+      <div class="slot-machine-display" aria-label="スロットマシン">
+        <div class="slot-reel" id="slotReel1"><span>7</span></div>
+        <div class="slot-reel" id="slotReel2"><span>7</span></div>
+        <div class="slot-reel" id="slotReel3"><span>7</span></div>
+      </div>
+
+      <div class="slot-gate-actions">
+        <button class="slot-spin-button" id="slotSpinButton" type="button" hidden disabled>
+          <span class="slot-button-icon" aria-hidden="true">♦</span>
+          <span id="slotButtonLabel">TAP TO SPIN</span>
+        </button>
+        <button class="slot-enter-button" id="slotEnterButton" type="button" hidden>
+          ENTER PROFILE <span aria-hidden="true">↗</span>
+        </button>
+        <p class="slot-gate-status" id="slotGateStatus" role="status" aria-live="polite">
+          タップしてスロットを回そう。
+        </p>
+        <p class="slot-gate-odds">JACKPOT 90% <span>／</span> RETRY 10%</p>
+      </div>
+      <p class="slot-gate-footer">TIME IS MONEY. &nbsp; GOOD LUCK.</p>
+    </div>
+  </section>
+
   <!-- キーボード操作の人が本文へ移動しやすくするためのリンク -->
   <a class="skip-link" href="#main">本文へスキップ</a>
 
@@ -27,16 +82,16 @@
         <span class="sr-only">メニューを開く</span>
       </button>
       <nav class="site-nav" id="siteNav" aria-label="メインメニュー">
-        <a href="#about">ABOUT</a>
-        <a href="#profile">PROFILE</a>
-        <a href="#skills">INTERESTS</a>
-        <a href="#bike">BIKE</a>
-        <a href="#games">GAMES</a>
-        <a href="#music">MUSIC</a>
-        <a href="#links">LINKS</a>
-        <a href="#updates">NEWS</a>
-        <a href="#gallery">GALLERY</a>
-        <a class="nav-contact" href="#guestbook">MESSAGE</a>
+        <a class="coin-shortcut" href="#about">ABOUT</a>
+        <a class="coin-shortcut" href="#profile">PROFILE</a>
+        <a class="coin-shortcut" href="#skills">INTERESTS</a>
+        <a class="coin-shortcut" href="#bike">BIKE</a>
+        <a class="coin-shortcut" href="#games">GAMES</a>
+        <a class="coin-shortcut" href="#music">MUSIC</a>
+        <a class="coin-shortcut" href="#links">LINKS</a>
+        <a class="coin-shortcut" href="#updates">NEWS</a>
+        <a class="coin-shortcut" href="#gallery">GALLERY</a>
+        <a class="nav-contact coin-shortcut" href="#guestbook">MESSAGE</a>
       </nav>
     </div>
   </header>
@@ -65,7 +120,7 @@
           <img id="profileImage" src="assets/profile-placeholder.svg" alt="プロフィール写真">
           <div class="portrait-label"><span>PROFILE / 01</span><span id="portraitName">YOUR NAME</span></div>
         </div>
-        <div class="hero-stamp" aria-hidden="true"><span>MY</span><strong>STORY</strong><span>EST. 20XX</span></div>
+        <div class="hero-stamp" aria-hidden="true"><span>MY</span><strong>STORY</strong><span>EST. 2006</span></div>
         <div class="hero-side-note" aria-hidden="true">A LITTLE ABOUT ME — SCROLL TO EXPLORE</div>
       </div>
     </section>
@@ -152,13 +207,15 @@
     </section>
 
     <!-- ========================= GAME HISTORY ========================= -->
-    <section class="section section-dark hobby-section" id="games">
+    <section class="section section-dark hobby-section game-history-section" id="games">
       <div class="section-shell">
         <div class="section-heading section-heading-row">
           <div><p class="eyebrow">05 / GAME HISTORY</p><h2>PLAY / RANK / REPEAT<span class="heading-en">GAMING RECORD</span></h2></div>
           <p class="section-note">これまでのランク実績と、今も遊んでいるタイトル。</p>
         </div>
-        <div class="game-grid" id="gameGrid"></div>
+        <div class="game-status-groups" id="gameStatusGroups">
+          <!-- js/main.js が活動状況ごとの3グループを生成します。 -->
+        </div>
       </div>
     </section>
 
@@ -257,7 +314,14 @@
     <section class="closing-band">
       <div class="section-shell closing-inner">
         <p class="eyebrow">THANK YOU FOR VISITING</p>
-        <p class="closing-copy">また、いつでも<br><span>遊びに来てください。</span></p>
+        <div class="closing-message-row">
+          <p class="closing-copy">また、いつでも<br><span>遊びに来てください。</span></p>
+          <button class="gogo-chance" id="gogoChance" type="button"
+                  aria-label="ゴーゴーチャンス。クリックすると画像が明るくなり、確定告知音が鳴ります。"
+                  aria-pressed="false" title="ゴーゴーチャンス">
+            <img src="assets/gogo-chance.webp" alt="" aria-hidden="true" decoding="async">
+          </button>
+        </div>
         <a class="button button-outline" href="#top">ページの先頭へ ↑</a>
       </div>
     </section>
@@ -271,6 +335,31 @@
     </div>
   </footer>
 
+
+  <!-- プロフィール閲覧中のBGM。slot-gateを通過したユーザー操作後に再生します。 -->
+  <audio id="profileBgm" loop preload="none">
+    <source src="assets/audio/bad-piggies-theme.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="gogoChanceAudio" preload="none">
+    <source src="assets/audio/gogo-confirm.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- 常時表示の日本時間リアルタイム時計 -->
+  <aside class="jst-clock" id="jstClock" aria-label="日本時間のリアルタイム時計">
+    <div class="jst-clock-kicker"><span class="jst-clock-live-dot" aria-hidden="true"></span> JAPAN STANDARD TIME</div>
+    <div class="jst-clock-main">
+      <time id="jstClockTime" datetime="">--:--:--</time>
+      <span class="jst-clock-period" id="jstClockPeriod">時間を確認中</span>
+    </div>
+    <div class="jst-clock-date" id="jstClockDate">日本時間を読み込み中...</div>
+  </aside>
+
+  <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false" hidden>
+    <span class="bgm-toggle-icon" aria-hidden="true">♫</span>
+    <span id="bgmToggleLabel">BGM OFF</span>
+  </button>
+
   <!-- 外部ライブラリ（Supabase）を読み込み。DB設定が未完了でもトップページは表示できます。 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- 設定ファイル → 表示内容 → DB接続 → ページの動作、の順に読み込みます。 -->
@@ -278,5 +367,7 @@
   <script src="js/site-data.js"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/main.js"></script>
+  <!-- トップページに入る前のスロットゲート -->
+  <script src="js/slot-gate.js"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@
 <body class="admin-body">
   <header class="admin-header">
     <div class="section-shell admin-header-inner">
-      <div><h1>ADMINISTRATOR</h1><p>お知らせ・訪問者コメントの管理</p></div>
+      <div><h1>ADMINISTRATOR</h1><p>リンク公開設定・お知らせ・訪問者コメントの管理</p></div>
       <a href="index.html">← サイトへ戻る</a>
     </div>
   </header>
@@ -38,6 +38,20 @@
         <div><h2>管理ダッシュボード</h2><p id="adminUserLabel">ログイン中</p></div>
         <button class="small-button" type="button" id="logoutButton">ログアウト</button>
       </div>
+
+
+      <!-- SNS・外部リンクの公開／非公開を管理する場所 -->
+      <section class="admin-section">
+        <div class="admin-section-header">
+          <h3>リンク公開設定</h3>
+          <button class="small-button" type="button" id="refreshLinkSettings">再読み込み</button>
+        </div>
+        <p class="admin-note">非公開にすると、プロフィール側ではリンクを無効化し、アイコンを鍵マークに切り替えます。変更後はプロフィールページを再読み込みしてください。</p>
+        <div class="admin-link-list" id="adminLinkSettings">
+          <p class="empty-message">読み込み中...</p>
+        </div>
+        <p class="admin-status" id="linkSettingsStatus" role="status" aria-live="polite"></p>
+      </section>
 
       <!-- お知らせの新規作成・編集 -->
       <section class="admin-section">
@@ -74,6 +88,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
+  <script src="js/site-data.js"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/admin.js"></script>
 </body>

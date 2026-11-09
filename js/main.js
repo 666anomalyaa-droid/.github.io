@@ -27,6 +27,91 @@
     return element;
   }
 
+
+  // --- 常時表示の日本時間時計（端末の時計をJST表記に変換） ---
+  function setupJapanClock() {
+    const timeNode = byId("jstClockTime");
+    const periodNode = byId("jstClockPeriod");
+    const dateNode = byId("jstClockDate");
+    if (!timeNode || !periodNode || !dateNode) return;
+
+    const timeFormatter = new Intl.DateTimeFormat("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23"
+    });
+    const dateFormatter = new Intl.DateTimeFormat("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      weekday: "short"
+    });
+    const hourFormatter = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Tokyo",
+      hour: "2-digit",
+      hourCycle: "h23"
+    });
+
+    const tick = () => {
+      const now = new Date();
+      const parts = hourFormatter.formatToParts(now);
+      const hourPart = parts.find((part) => part.type === "hour");
+      const hour = hourPart ? Number(hourPart.value) : 0;
+
+      let period = "深夜の時間帯";
+      if (hour >= 5 && hour < 11) period = "朝の時間帯";
+      else if (hour >= 11 && hour < 15) period = "昼の時間帯";
+      else if (hour >= 15 && hour < 18) period = "夕方の時間帯";
+      else if (hour >= 18 && hour < 23) period = "夜の時間帯";
+
+      timeNode.textContent = timeFormatter.format(now);
+      timeNode.dateTime = now.toISOString();
+      periodNode.textContent = period;
+      dateNode.textContent = dateFormatter.format(now);
+    };
+
+    tick();
+    window.setInterval(tick, 1000);
+  }
+
+  // --- GOGO CHANCE：暗い画像をクリックで点灯し、確定告知音を再生 ---
+  function setupGogoChance() {
+    const button = byId("gogoChance");
+    const audio = byId("gogoChanceAudio");
+    if (!button || !audio) return;
+
+    audio.preload = "none";
+    audio.volume = 0.88;
+
+    button.addEventListener("click", () => {
+      button.classList.add("is-lit");
+      button.setAttribute("aria-pressed", "true");
+      button.setAttribute("aria-label", "ゴーゴーチャンス点灯中。もう一度クリックすると確定告知音をもう一度再生します。");
+
+      // 毎回、クリックした瞬間に頭から鳴らす（ブラウザのユーザー操作内で実行）。
+      try {
+        audio.pause();
+        audio.currentTime = 0;
+        const playResult = audio.play();
+        if (playResult && typeof playResult.catch === "function") {
+          playResult.catch(() => {
+            button.classList.add("sound-unavailable");
+          });
+        }
+      } catch (error) {
+        button.classList.add("sound-unavailable");
+      }
+
+      // 連打でも「ガコッ！」の点灯フラッシュを再演出する。
+      button.classList.remove("is-triggered");
+      void button.offsetWidth;
+      button.classList.add("is-triggered");
+    });
+  }
+
   // --- 1. サイトの基本プロフィールを画面へ反映 ---
   function renderProfile() {
     const p = content.profile;
@@ -99,57 +184,109 @@
     grid.replaceChildren();
     (content.skills || []).forEach((item) => {
       const card = makeElement("article", "skill-card");
-      card.append(makeElement("span", "skill-number", item.title));
-      card.append(makeElement("h3", "", item.name));
-      card.append(makeElement("p", "", item.description));
+      const copy = makeElement("div", "skill-card-copy");
+      copy.append(makeElement("span", "skill-number", item.title));
+      copy.append(makeElement("h3", "", item.name));
+      copy.append(makeElement("p", "", item.description));
+      card.append(copy);
+      if (item.image) {
+        const image = makeElement("img", "skill-card-image");
+        image.src = item.image;
+        image.alt = item.imageAlt || `${item.name}のイメージ`;
+        image.loading = "lazy";
+        image.decoding = "async";
+        image.onerror = () => { image.onerror = null; image.hidden = true; };
+        card.append(image);
+      }
       grid.append(card);
     });
   }
 
   // --- 5. SNS・外部リンクを表示 ---
-  function renderSocialLinks() {
+  function renderSocialLinks(linkSettings = {}) {
     const grid = byId("socialGrid");
     grid.replaceChildren();
+
     (content.socialLinks || []).forEach((item) => {
-      const isValidLink = typeof item.url === "string" && item.url.trim() !== "";
-      const card = makeElement(item.copy ? "div" : (isValidLink ? "a" : "div"), `social-card${isValidLink ? "" : " is-disabled"}`);
+      const key = item.key || item.name.toLowerCase();
+      // DBに設定がないリンクは公開扱い。初回移行時も既存リンクが消えないようにします。
+      const isPublic = linkSettings[key] !== false;
+      const isValidLink = isPublic && typeof item.url === "string" && item.url.trim() !== "";
+      const card = makeElement("article", `social-card${isValidLink ? "" : " is-disabled"}${!isPublic ? " is-locked" : ""}`);
+
+      // 非公開の場合はhrefを作らず、押しても外部へ移動できません。
+      const mainLink = makeElement(isValidLink ? "a" : "div", "social-card-main");
       if (isValidLink) {
-        card.href = item.url;
-        // 外部リンクは新しいタブで開き、開いた先から元サイトを操作できないようにする
-        if (!item.url.startsWith("mailto:")) {
-          card.target = "_blank";
-          card.rel = "noopener noreferrer";
-        }
+        mainLink.href = item.url;
+        mainLink.target = "_blank";
+        mainLink.rel = "noopener noreferrer";
+        mainLink.setAttribute("aria-label", `${item.name}を開く`);
+      } else if (!isPublic) {
+        mainLink.setAttribute("aria-label", `${item.name}は現在非公開です`);
+        mainLink.setAttribute("aria-disabled", "true");
+        mainLink.setAttribute("title", "現在非公開です");
       }
-      const icon = makeElement("span", "social-icon", item.icon || "↗");
+
+      const iconWrap = makeElement("span", `social-icon${!isPublic ? " is-lock-icon" : ""}`);
+      if (!isPublic) {
+        const lock = makeElement("span", "social-lock", "🔒");
+        lock.setAttribute("aria-hidden", "true");
+        iconWrap.append(lock);
+      } else {
+        const iconImage = document.createElement("img");
+        iconImage.src = item.iconImage || "assets/favicon.svg";
+        iconImage.alt = "";
+        iconImage.loading = "lazy";
+        iconImage.decoding = "async";
+        iconWrap.append(iconImage);
+      }
+
       const info = makeElement("span", "social-info");
       info.append(makeElement("span", "social-name", item.name));
-      info.append(makeElement("span", "social-handle", isValidLink ? item.handle : "リンク設定待ち"));
-      if (item.activity) info.append(makeElement("span", "social-activity", item.activity));
-      card.append(icon, info);
-      card.append(makeElement("span", "social-arrow", isValidLink ? "↗" : "—"));
-      if (item.copy) {
-        const profileLink = makeElement("a", "steam-profile-link", "Steamを開く ↗");
-        profileLink.href = item.url;
-        profileLink.target = "_blank";
-        profileLink.rel = "noopener noreferrer";
-        card.append(profileLink);
-        const copy = makeElement("button", "steam-copy", "CODEをコピー");
+      info.append(makeElement("span", "social-handle", !isPublic ? "現在非公開" : (isValidLink ? item.handle : "リンク設定待ち")));
+      if (item.activity && isPublic) info.append(makeElement("span", "social-activity", item.activity));
+
+      const indicator = makeElement("span", "social-arrow", !isPublic ? "🔒" : (isValidLink ? "↗" : "—"));
+      mainLink.append(iconWrap, info, indicator);
+      card.append(mainLink);
+
+      // Steamのフレンドコード操作も公開中だけ表示します。
+      if (item.copy && isPublic) {
+        const actions = makeElement("div", "social-actions");
+        const copy = makeElement("button", "steam-copy", "フレンドコードをコピー");
         copy.type = "button";
-        copy.addEventListener("click", async (event) => {
-          event.preventDefault();
-          event.stopPropagation();
+        copy.addEventListener("click", async () => {
           try {
             await navigator.clipboard.writeText(item.copy);
-            copy.textContent = "コピー済み";
+            copy.textContent = "コピーしました";
           } catch (_) {
-            copy.textContent = item.copy;
+            copy.textContent = `CODE: ${item.copy}`;
           }
         });
-        card.append(copy);
+        actions.append(copy);
+        card.append(actions);
       }
       grid.append(card);
     });
+  }
+
+  // 公開／非公開状態はDBで管理。DB移行前や通信エラー時は既存リンクを公開状態で表示します。
+  async function loadLinkVisibility() {
+    if (!isDbReady) {
+      renderSocialLinks({});
+      return;
+    }
+    const { data, error } = await db
+      .from("site_link_settings")
+      .select("link_key, is_public");
+    if (error) {
+      console.warn("リンク公開設定を読み込めませんでした。リンクは既定の公開状態で表示します。", error.message);
+      renderSocialLinks({});
+      return;
+    }
+    const settings = {};
+    (data || []).forEach((row) => { settings[row.link_key] = row.is_public; });
+    renderSocialLinks(settings);
   }
 
   // --- 6. ギャラリーカードを表示 ---
@@ -194,18 +331,57 @@
       });
     }
 
-    const gameGrid = byId("gameGrid");
-    if (gameGrid) {
-      gameGrid.replaceChildren();
-      (hobbies.games || []).forEach((game, index) => {
-        const card = makeElement("article", "game-card");
-        const top = makeElement("div", "game-card-top");
-        top.append(makeElement("span", "game-index", String(index + 1).padStart(2, "0")));
-        const status = makeElement("span", "game-status", game.status);
-        status.classList.add(game.status === "活動中" ? "is-active" : game.status === "引退済み" ? "is-retired" : "is-regular");
-        top.append(status);
-        card.append(top, makeElement("h3", "", game.name), makeElement("p", "", game.detail));
-        gameGrid.append(card);
+    const gameGroups = byId("gameStatusGroups");
+    if (gameGroups) {
+      gameGroups.replaceChildren();
+      const groupDefinitions = [
+        { status: "活動中", title: "NOW PLAYING", subtitle: "活動中" },
+        { status: "定期的", title: "ON ROTATION", subtitle: "定期的" },
+        { status: "引退済み", title: "LEGACY RECORDS", subtitle: "引退済み" }
+      ];
+
+      let gameCardIndex = 0;
+      groupDefinitions.forEach((group, groupIndex) => {
+        const games = (hobbies.games || []).filter((game) => game.status === group.status);
+        if (!games.length) return;
+
+        const section = makeElement("section", `game-status-group game-group-${groupIndex + 1}`);
+        const heading = makeElement("div", "game-group-heading");
+        const headingMain = makeElement("div", "game-group-heading-main");
+        headingMain.append(
+          makeElement("span", "game-group-en", group.title),
+          makeElement("h3", "game-group-jp", group.subtitle)
+        );
+        heading.append(headingMain, makeElement("span", "game-group-count", `${String(games.length).padStart(2, "0")} TITLES`));
+        section.append(heading);
+
+        const grid = makeElement("div", "game-grid");
+        games.forEach((game, index) => {
+          const tone = ((gameCardIndex++ % 13) + 1).toString();
+          const card = makeElement("article", `game-card game-tone-${tone}`);
+          if (game.image) {
+            card.classList.add("has-game-background");
+            const art = makeElement("img", "game-card-image");
+            art.src = game.image;
+            art.alt = "";
+            art.setAttribute("aria-hidden", "true");
+            art.loading = "lazy";
+            art.decoding = "async";
+            art.onerror = () => {
+              art.remove();
+              card.classList.remove("has-game-background");
+            };
+            card.append(art);
+          }
+          const top = makeElement("div", "game-card-top");
+          top.append(makeElement("span", "game-index", String(index + 1).padStart(2, "0")));
+          const status = makeElement("span", `game-status-pill ${game.status === "活動中" ? "is-active" : game.status === "引退済み" ? "is-retired" : "is-rotation"}`, game.status || "プレイ記録");
+          top.append(status);
+          card.append(top, makeElement("h4", "", game.name), makeElement("p", "", game.detail));
+          grid.append(card);
+        });
+        section.append(grid);
+        gameGroups.append(section);
       });
     }
 
@@ -213,11 +389,23 @@
     if (musicGrid) {
       musicGrid.replaceChildren();
       (hobbies.music || []).forEach((track) => {
-        const row = makeElement("article", "music-row");
+        const row = makeElement(track.spotifyUrl ? "a" : "article", "music-row");
+        if (track.spotifyUrl) {
+          row.href = track.spotifyUrl;
+          row.target = "_blank";
+          row.rel = "noopener noreferrer";
+          row.setAttribute("aria-label", `${track.title} - ${track.artist} をSpotifyで開く`);
+        }
         row.append(makeElement("span", "music-rank", track.rank));
         const info = makeElement("div", "music-info");
         info.append(makeElement("h3", "", track.title), makeElement("p", "", track.artist));
-        row.append(info, makeElement("span", "music-equalizer", "♫"));
+        const cover = makeElement("img", "music-cover");
+        cover.src = track.image || "assets/gallery-placeholder.svg";
+        cover.alt = `${track.title} のジャケット画像`;
+        cover.loading = "lazy";
+        cover.decoding = "async";
+        cover.onerror = () => { cover.onerror = null; cover.src = "assets/gallery-placeholder.svg"; };
+        row.append(info, cover, makeElement("span", "music-equalizer", "♫"));
         musicGrid.append(row);
       });
     }
@@ -497,12 +685,62 @@
   }
 
   // ページの初期表示。各パーツを順番に組み立てます。
+  // --- BGM：スロット通過後のプロフィール閲覧中だけループ再生 ---
+  function setupProfileBgm() {
+    const audio = byId("profileBgm");
+    const toggle = byId("bgmToggle");
+    const label = byId("bgmToggleLabel");
+    if (!audio || !toggle || !label) return;
+
+    audio.loop = true;
+    audio.volume = 0.28;
+
+    const updateUi = (isPlaying) => {
+      toggle.hidden = false;
+      toggle.setAttribute("aria-pressed", String(isPlaying));
+      toggle.classList.toggle("is-playing", isPlaying);
+      label.textContent = isPlaying ? "BGM ON" : "BGM OFF";
+    };
+
+    const tryPlay = () => {
+      // この関数は「プロフィールへ入る」クリックから直接呼ばれるため、
+      // ブラウザのユーザー操作に伴う音声再生許可を利用します。
+      const playPromise = audio.play();
+      if (playPromise && typeof playPromise.then === "function") {
+        playPromise.then(() => updateUi(true)).catch(() => updateUi(false));
+      } else {
+        updateUi(true);
+      }
+    };
+
+    window.HRuaBgm = { start: tryPlay };
+    toggle.addEventListener("click", () => {
+      if (audio.paused) {
+        tryPlay();
+      } else {
+        audio.pause();
+        updateUi(false);
+      }
+    });
+    audio.addEventListener("ended", () => {
+      if (audio.loop) updateUi(true);
+      else updateUi(false);
+    });
+    audio.addEventListener("error", () => {
+      label.textContent = "BGM ERROR";
+      toggle.hidden = false;
+    });
+  }
+
+  setupProfileBgm();
+  setupJapanClock();
+  setupGogoChance();
   renderProfile();
   renderCareer();
   renderCertificates();
   renderSkills();
   renderHobbies();
-  renderSocialLinks();
+  loadLinkVisibility();
   renderGallery();
   setupMobileMenu();
   setupGalleryControls();
