@@ -112,7 +112,7 @@
     grid.replaceChildren();
     (content.socialLinks || []).forEach((item) => {
       const isValidLink = typeof item.url === "string" && item.url.trim() !== "";
-      const card = makeElement(isValidLink ? "a" : "div", `social-card${isValidLink ? "" : " is-disabled"}`);
+      const card = makeElement(item.copy ? "div" : (isValidLink ? "a" : "div"), `social-card${isValidLink ? "" : " is-disabled"}`);
       if (isValidLink) {
         card.href = item.url;
         // 外部リンクは新しいタブで開き、開いた先から元サイトを操作できないようにする
@@ -125,8 +125,29 @@
       const info = makeElement("span", "social-info");
       info.append(makeElement("span", "social-name", item.name));
       info.append(makeElement("span", "social-handle", isValidLink ? item.handle : "リンク設定待ち"));
+      if (item.activity) info.append(makeElement("span", "social-activity", item.activity));
       card.append(icon, info);
       card.append(makeElement("span", "social-arrow", isValidLink ? "↗" : "—"));
+      if (item.copy) {
+        const profileLink = makeElement("a", "steam-profile-link", "Steamを開く ↗");
+        profileLink.href = item.url;
+        profileLink.target = "_blank";
+        profileLink.rel = "noopener noreferrer";
+        card.append(profileLink);
+        const copy = makeElement("button", "steam-copy", "CODEをコピー");
+        copy.type = "button";
+        copy.addEventListener("click", async (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          try {
+            await navigator.clipboard.writeText(item.copy);
+            copy.textContent = "コピー済み";
+          } catch (_) {
+            copy.textContent = item.copy;
+          }
+        });
+        card.append(copy);
+      }
       grid.append(card);
     });
   }
@@ -151,6 +172,55 @@
       card.append(imageWrap, body);
       track.append(card);
     });
+  }
+
+  // --- 6.5 趣味の詳細（バイク・ゲーム・音楽）を表示 ---
+  function renderHobbies() {
+    const hobbies = content.hobbies || {};
+    const bike = hobbies.bike || {};
+    const intro = byId("bikeIntro");
+    if (intro) intro.textContent = bike.intro || "";
+    const note = byId("bikeNote");
+    if (note) note.textContent = bike.note || "";
+    const timeline = byId("bikeTimeline");
+    if (timeline) {
+      timeline.replaceChildren();
+      (bike.timeline || []).forEach((item) => {
+        const card = makeElement("article", "bike-milestone");
+        card.append(makeElement("span", "milestone-date", item.date));
+        card.append(makeElement("h3", "", item.title));
+        card.append(makeElement("p", "", item.description));
+        timeline.append(card);
+      });
+    }
+
+    const gameGrid = byId("gameGrid");
+    if (gameGrid) {
+      gameGrid.replaceChildren();
+      (hobbies.games || []).forEach((game, index) => {
+        const card = makeElement("article", "game-card");
+        const top = makeElement("div", "game-card-top");
+        top.append(makeElement("span", "game-index", String(index + 1).padStart(2, "0")));
+        const status = makeElement("span", "game-status", game.status);
+        status.classList.add(game.status === "活動中" ? "is-active" : game.status === "引退済み" ? "is-retired" : "is-regular");
+        top.append(status);
+        card.append(top, makeElement("h3", "", game.name), makeElement("p", "", game.detail));
+        gameGrid.append(card);
+      });
+    }
+
+    const musicGrid = byId("musicRanking");
+    if (musicGrid) {
+      musicGrid.replaceChildren();
+      (hobbies.music || []).forEach((track) => {
+        const row = makeElement("article", "music-row");
+        row.append(makeElement("span", "music-rank", track.rank));
+        const info = makeElement("div", "music-info");
+        info.append(makeElement("h3", "", track.title), makeElement("p", "", track.artist));
+        row.append(info, makeElement("span", "music-equalizer", "♫"));
+        musicGrid.append(row);
+      });
+    }
   }
 
   // --- 7. お知らせを表示 ---
@@ -378,16 +448,66 @@
     });
   }
 
+
+  // --- 13.5 ゴールドダストと弾丸風ライト演出 ---
+  function setupAmbientEffects() {
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+    const layer = document.createElement("div");
+    layer.className = "ambient-fx";
+    layer.setAttribute("aria-hidden", "true");
+    document.body.append(layer);
+
+    // 金色の粒子。画面幅に応じて数を抑え、スマホでも軽く動作させます。
+    const particleCount = window.innerWidth < 700 ? 12 : 24;
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement("i");
+      particle.className = "gold-particle";
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.animationDelay = `${Math.random() * 18}s`;
+      particle.style.animationDuration = `${12 + Math.random() * 14}s`;
+      particle.style.setProperty("--drift", `${Math.round(Math.random() * 100 - 50)}px`);
+      layer.append(particle);
+    }
+
+    // 時折、光の弾道と一瞬の亀裂フラッシュを発生させます。
+    let stopped = false;
+    const fire = () => {
+      if (stopped || document.hidden) {
+        window.setTimeout(fire, 5000);
+        return;
+      }
+      const streak = document.createElement("span");
+      streak.className = "light-streak";
+      streak.style.top = `${12 + Math.random() * 72}%`;
+      layer.append(streak);
+      window.setTimeout(() => {
+        streak.remove();
+        const crack = document.createElement("span");
+        crack.className = "impact-crack";
+        crack.style.left = `${18 + Math.random() * 64}%`;
+        crack.style.top = `${18 + Math.random() * 64}%`;
+        layer.append(crack);
+        window.setTimeout(() => crack.remove(), 900);
+      }, 460);
+      window.setTimeout(fire, 9000 + Math.random() * 12000);
+    };
+    window.setTimeout(fire, 3500);
+    window.addEventListener("pagehide", () => { stopped = true; }, { once: true });
+  }
+
   // ページの初期表示。各パーツを順番に組み立てます。
   renderProfile();
   renderCareer();
   renderCertificates();
   renderSkills();
+  renderHobbies();
   renderSocialLinks();
   renderGallery();
   setupMobileMenu();
   setupGalleryControls();
   setupGuestForm();
   setupMotionEffects();
+  setupAmbientEffects();
   loadPublicData();
 })();

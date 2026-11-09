@@ -887,3 +887,158 @@ a.social-card:hover {
   .motion-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
   .button::after { display: none; }
 }
+
+
+
+/* =====================================================================
+   H-Rua!! LUXURY CRIMSON EDITION
+   黒・クリムゾン・ゴールド・シルバーを中心にした追加テーマ。
+   既存のレイアウトやフォーム機能を維持しつつ色と質感を統一します。
+   ===================================================================== */
+:root {
+  --navy: #10090e;
+  --navy-soft: #1a1018;
+  --navy-light: #2b1b25;
+  --ink: #e6dce2;
+  --muted: #aaa0a8;
+  --paper: #171318;
+  --white: #f1e9ee;
+  --line: #3b3039;
+  --accent: #a90e38;
+  --accent-dark: #d12a50;
+  --gold: #c9a45d;
+  --silver: #aeb2bd;
+  --radius: 16px;
+  --shadow: 0 22px 65px rgba(0,0,0,.42);
+}
+body { color: var(--ink); background: #10090e; }
+::selection { color: #fff; background: #8b1234; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, .gallery-track:focus-visible {
+  outline-color: var(--gold);
+}
+.site-header { background: rgba(12,7,11,.94); border-bottom-color: rgba(201,164,93,.22); }
+.brand-mark { color: #fff; background: linear-gradient(135deg,#9c0d34,#d4ad62); border-radius: 50%; }
+.site-nav a:hover, .hero .eyebrow, .section-dark .eyebrow, .closing-band .eyebrow { color: #e3bd73; }
+.site-nav .nav-contact { color: #fff; background: linear-gradient(110deg,#8e0c31,#b91e46); border: 1px solid rgba(218,177,100,.5); }
+.site-nav .nav-contact:hover { color: #fff; background: #bd1e49; }
+.hero, .section-about { background: radial-gradient(ellipse at 80% 30%,rgba(118,8,48,.28),transparent 45%), #10090e; }
+.hero { min-height: 690px; }
+.hero h1 { color: #fff; text-shadow: 0 8px 35px rgba(201,164,93,.12); }
+.hero h1 small { color: #aeb2bd; }
+.hero-kicker { color: #d9b46c; }
+.hero .eyebrow { color: #d5ad69; }
+.hero-lead, .about-message { color: #d0c4cc; }
+.status-dot { background: #c9a45d; box-shadow: 0 0 0 5px rgba(201,164,93,.13),0 0 15px rgba(201,164,93,.6); }
+.portrait-frame { border: 1px solid rgba(201,164,93,.55); box-shadow: 18px 18px 0 rgba(139,8,46,.26),0 0 45px rgba(132,9,55,.15); }
+.portrait-frame::after { background: linear-gradient(180deg,transparent 45%,rgba(9,5,9,.85)); }
+.hero-stamp { color: #1b1016; background: linear-gradient(145deg,#f0d18b,#a77d38); border-color: #10090e; }
+.section-about .section-heading h2 span { color: #d6ae69; }
+.about-tag { color: #dfb96e; border-color: rgba(201,164,93,.35); background: rgba(126,10,48,.16); }
+.section-light { background: #171318; }
+.section-heading h2 { color: #f1e9ee; }
+.heading-en { color: #a99ba4; }
+.section-heading-row .section-note, .section-intro { color: #b8abb3; }
+.text-link { color: #d7b36f; }
+.button-primary { color: #fff; background: linear-gradient(110deg,#8c0b31,#bd1c48); border-color: rgba(216,177,103,.55); box-shadow: 0 8px 25px rgba(121,8,42,.25); }
+.button-primary:hover { color: #fff; background: linear-gradient(110deg,#b20f3d,#d32d57); }
+.button-outline { color: #e5c37d; border-color: rgba(201,164,93,.55); }
+.button-outline:hover { color: #140b10; background: #d3ad69; }
+.profile-card { background: linear-gradient(135deg,#1b1119,#10090e 65%,#300d20); border: 1px solid rgba(201,164,93,.3); }
+.profile-card::after { border-color: rgba(201,164,93,.3); box-shadow: 0 0 0 25px rgba(201,164,93,.035),0 0 0 50px rgba(143,12,51,.04); }
+.card-label, .detail-item dt { color: #d8b36f; }
+.profile-card-number span { color: #d8b36f; }
+.resume-panel { color: #e8dfe4; background: #211a22; border-color: #40313d; }
+.resume-panel h3, .timeline-title, .certificate-name { color: #f1e9ee; }
+.timeline-item { border-left-color: #704052; }
+.timeline-date { color: #d5ad69; }
+.timeline-description, .certificate-date { color: #b6a9b1; }
+.certificate-list li { border-bottom-color: #40313d; }
+.section-dark { color: #f1e9ee; background: linear-gradient(145deg,#21131d,#120d13); }
+.section-dark .section-heading h2 { color: #f1e9ee; }
+.skill-card, .social-card, .gallery-card, .news-item, .guest-message {
+  color: #eee5eb; background: #211a22; border-color: rgba(201,164,93,.22);
+  box-shadow: 0 12px 32px rgba(0,0,0,.2);
+}
+.skill-card h3, .social-name, .gallery-card h3, .news-title, .guest-message-name { color: #f4eaf0; }
+.skill-card p, .social-handle, .gallery-card p, .news-body, .guest-message-content { color: #bdb0b9; }
+.skill-number, .gallery-date, .news-date { color: #d5ad69; }
+.social-icon { color: #e0bd78; background: rgba(141,12,50,.2); border-color: rgba(201,164,93,.28); }
+.social-card:hover, .skill-card:hover, .gallery-card:hover { border-color: rgba(216,177,103,.65); box-shadow: 0 20px 42px rgba(0,0,0,.36),0 0 22px rgba(139,12,50,.12); }
+.social-card.is-disabled { opacity: .65; }
+.social-activity { display: inline-block; margin-top: 4px; color: #d0a95f; font-size: 9px; letter-spacing: .08em; }
+.steam-copy { margin-left: auto; padding: 5px 8px; color: #e7c47d; background: rgba(138,12,48,.22); border: 1px solid rgba(201,164,93,.3); border-radius: 5px; font-size: 9px; }
+.section-news { background: #10090e; }
+.news-label { color: #d7b36f; }
+.guest-form { background: #211a22; border: 1px solid #493541; }
+.guest-form label { color: #e8dfe4; }
+.guest-form input, .guest-form textarea { color: #f2eaf0; background: #130e14; border-color: #55404d; }
+.guest-form input::placeholder, .guest-form textarea::placeholder { color: #847681; }
+.form-note, .form-status { color: #b9abb4; }
+.guest-messages-heading h3 { color: #e7dce4; }
+.message-count, .guest-message-date { color: #c9a45d; }
+.closing-band { background: radial-gradient(ellipse at 50% 0%,rgba(133,8,46,.35),transparent 55%),#0c070b; }
+.closing-copy { color: #f2e8ed; }
+.closing-copy span { color: #d4ad69; }
+.site-footer { color: #b4a7b0; background: #090609; border-top: 1px solid rgba(201,164,93,.22); }
+.footer-admin-link { color: #d5ad69; }
+.empty-message, .section-note { color: #b8abb3; }
+
+/* 趣味の詳細セクション */
+.hobby-section { background: #171318; }
+.hobby-feature { display: grid; grid-template-columns: 110px 1fr; gap: 25px; align-items: center; padding: 30px; background: linear-gradient(120deg,#2a1721,#171218); border: 1px solid rgba(201,164,93,.3); border-radius: var(--radius); }
+.hobby-feature-mark { display: grid; place-items: center; aspect-ratio: 1; color: #d9b66f; border: 1px solid rgba(201,164,93,.5); border-radius: 50%; font-size: 10px; letter-spacing: .15em; text-align: center; }
+.hobby-feature-mark strong { font: 700 32px Georgia,serif; }
+.hobby-feature h3 { margin: 0 0 10px; color: #f4eaf0; font-size: clamp(23px,4vw,34px); }
+.hobby-feature p { margin: 0; color: #c6b9c1; line-height: 2; }
+.hobby-feature .muted-note { margin-top: 9px; color: #d2ad69; font-size: 11px; }
+.hobby-timeline { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; margin-top: 20px; }
+.bike-milestone { padding: 24px; background: #211a22; border: 1px solid #493541; border-radius: 12px; }
+.milestone-date { color: #d6b16c; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.bike-milestone h3 { margin: 8px 0; color: #f3e8ef; font-size: 17px; }
+.bike-milestone p { margin: 0; color: #bbaeb7; font-size: 12px; line-height: 1.9; }
+.game-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
+.game-card { min-height: 145px; padding: 19px; background: rgba(255,255,255,.035); border: 1px solid rgba(201,164,93,.22); border-radius: 12px; transition: transform .25s ease,border-color .25s ease,background .25s ease; }
+.game-card:hover { transform: translateY(-4px); border-color: rgba(201,164,93,.65); background: rgba(126,9,47,.14); }
+.game-card-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.game-index { color: #c9a45d; font: 700 11px Georgia,serif; }
+.game-status { padding: 3px 7px; border-radius: 99px; color: #d7bd88; background: rgba(201,164,93,.1); font-size: 9px; white-space: nowrap; }
+.game-status.is-active { color: #f3d38b; background: rgba(143,18,55,.38); }
+.game-status.is-retired { color: #aeb2bd; background: rgba(174,178,189,.1); }
+.game-card h3 { margin: 15px 0 5px; color: #f1e8ed; font-size: 15px; }
+.game-card p { margin: 0; color: #b9acb5; font-size: 11px; line-height: 1.7; }
+.music-section { background: #10090e; }
+.music-ranking { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px 18px; }
+.music-row { display: flex; align-items: center; gap: 17px; padding: 15px 18px; background: #211a22; border: 1px solid rgba(201,164,93,.2); border-radius: 10px; transition: transform .2s ease,border-color .2s ease; }
+.music-row:hover { transform: translateX(4px); border-color: rgba(201,164,93,.6); }
+.music-rank { color: #d3ad68; font: 700 21px Georgia,serif; min-width: 30px; }
+.music-info { flex: 1; min-width: 0; }
+.music-info h3 { margin: 0; color: #f3e9ef; font-size: 13px; }
+.music-info p { margin: 3px 0 0; color: #b7aab3; font-size: 10px; }
+.music-equalizer { color: #d5ad69; font-size: 19px; }
+
+/* 背景に降るゴールドダスト */
+.ambient-fx { position: fixed; inset: 0; z-index: 4; overflow: hidden; pointer-events: none; contain: strict; }
+.gold-particle { position: absolute; top: -12px; width: 3px; height: 3px; border-radius: 50%; background: #e3bf72; opacity: 0; box-shadow: 0 0 9px rgba(227,191,114,.8); animation: gold-fall linear infinite; }
+@keyframes gold-fall { 0% { transform: translate3d(0,-4vh,0); opacity: 0; } 12% { opacity: .65; } 85% { opacity: .45; } 100% { transform: translate3d(var(--drift),110vh,0); opacity: 0; } }
+.light-streak { position: fixed; left: -30vw; width: 34vw; height: 2px; background: linear-gradient(90deg,transparent,#fff 48%,#e8c36f 60%,transparent); box-shadow: 0 0 12px #d9aefc,0 0 25px rgba(196,42,100,.7); transform: rotate(-8deg); animation: bullet-pass .46s ease-out forwards; }
+@keyframes bullet-pass { 0% { left: -35vw; opacity: 0; } 12% { opacity: 1; } 100% { left: 120vw; opacity: 0; } }
+.impact-crack { position: fixed; width: 90px; height: 90px; transform: translate(-50%,-50%); opacity: 0; animation: crack-flash .9s ease-out forwards; }
+.impact-crack::before, .impact-crack::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg,transparent 48%,rgba(238,214,255,.9) 49%,rgba(201,164,93,.65) 50%,transparent 52%); clip-path: polygon(49% 0,53% 0,52% 37%,100% 48%,100% 52%,55% 54%,51% 100%,47% 100%,47% 55%,0 51%,0 47%,46% 46%); filter: drop-shadow(0 0 7px rgba(220,170,255,.8)); }
+.impact-crack::after { transform: rotate(54deg) scale(.7); }
+@keyframes crack-flash { 0% { opacity: 0; transform: translate(-50%,-50%) scale(.45); } 20% { opacity: .95; } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.4); } }
+
+@media (max-width: 800px) {
+  .game-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .hobby-timeline { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .hobby-feature { grid-template-columns: 1fr; padding: 22px; }
+  .hobby-feature-mark { width: 84px; }
+  .game-grid, .music-ranking { grid-template-columns: 1fr; }
+  .music-row { padding: 13px; }
+  .steam-copy { font-size: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient-fx { display: none !important; }
+  .game-card, .music-row { transition: none !important; }
+}
