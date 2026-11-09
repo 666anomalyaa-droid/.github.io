@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>管理者ページ | Personal Portfolio</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="admin-body">
+  <header class="admin-header">
+    <div class="section-shell admin-header-inner">
+      <div><h1>ADMINISTRATOR</h1><p>お知らせ・訪問者コメントの管理</p></div>
+      <a href="index.html">← サイトへ戻る</a>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <!-- ログインしていない時に表示するフォーム -->
+    <section class="admin-login" id="adminLogin">
+      <p class="eyebrow">PRIVATE AREA</p>
+      <h2>管理者ログイン</h2>
+      <p>Supabase Authに登録した管理者アカウントでログインしてください。</p>
+      <form class="admin-form" id="loginForm">
+        <label for="adminEmail">メールアドレス</label>
+        <input id="adminEmail" type="email" autocomplete="username" required placeholder="admin@example.com">
+        <label for="adminPassword">パスワード</label>
+        <input id="adminPassword" type="password" autocomplete="current-password" required placeholder="パスワード">
+        <button class="button button-primary button-wide" type="submit" id="loginButton">ログインする</button>
+        <p class="admin-status" id="loginStatus" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- ログイン後だけ表示する管理ダッシュボード -->
+    <div class="admin-dashboard" id="adminDashboard" hidden>
+      <div class="admin-topline">
+        <div><h2>管理ダッシュボード</h2><p id="adminUserLabel">ログイン中</p></div>
+        <button class="small-button" type="button" id="logoutButton">ログアウト</button>
+      </div>
+
+      <!-- お知らせの新規作成・編集 -->
+      <section class="admin-section">
+        <div class="admin-section-header"><h3>お知らせを投稿する</h3></div>
+        <form class="admin-form" id="announcementForm">
+          <input type="hidden" id="announcementId">
+          <div class="admin-form-grid">
+            <div class="full"><label for="announcementTitle">タイトル</label><input id="announcementTitle" type="text" maxlength="100" required placeholder="例：ホームページを公開しました"></div>
+            <div class="full"><label for="announcementContent">本文</label><textarea id="announcementContent" rows="5" maxlength="3000" required placeholder="お知らせの内容を入力"></textarea></div>
+            <div class="full"><label class="admin-checkbox"><input id="announcementPublished" type="checkbox" checked> 保存と同時に公開する</label></div>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:10px;">
+            <button class="button button-primary" type="submit" id="announcementSaveButton">投稿する</button>
+            <button class="small-button" type="button" id="announcementCancelEdit" hidden>編集をキャンセル</button>
+          </div>
+          <p class="admin-status" id="announcementStatus" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- 投稿済みのお知らせ一覧 -->
+      <section class="admin-section">
+        <div class="admin-section-header"><h3>投稿済みのお知らせ</h3><button class="small-button" type="button" id="refreshAnnouncements">再読み込み</button></div>
+        <div class="admin-record-list" id="adminAnnouncementList"><p class="empty-message">読み込み中...</p></div>
+      </section>
+
+      <!-- 訪問者のコメントを承認・削除する場所 -->
+      <section class="admin-section">
+        <div class="admin-section-header"><h3>訪問者コメントの管理</h3><button class="small-button" type="button" id="refreshComments">再読み込み</button></div>
+        <p class="admin-note">「承認する」を押すとトップページに公開されます。公開したくないコメントは削除できます。</p>
+        <div class="admin-record-list" id="adminCommentList"><p class="empty-message">読み込み中...</p></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
