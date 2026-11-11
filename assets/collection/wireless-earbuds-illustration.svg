@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 560">
+<defs>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f6dc9c"/><stop offset=".5" stop-color="#b88a45"/><stop offset="1" stop-color="#fff0c7"/></linearGradient>
+ <linearGradient id="case" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#24242a"/><stop offset="1" stop-color="#050507"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="9"/></filter>
+</defs>
+<ellipse cx="360" cy="445" rx="220" ry="28" fill="#bd9651" opacity=".17" filter="url(#glow)"/>
+<rect x="155" y="265" width="410" height="190" rx="88" fill="url(#case)" stroke="url(#gold)" stroke-width="5"/>
+<path d="M159 333 Q360 410 561 333" fill="none" stroke="#8a8a94" stroke-width="3" opacity=".6"/>
+<circle cx="360" cy="367" r="9" fill="#c8a266"/>
+<g fill="url(#case)" stroke="url(#gold)" stroke-width="5">
+ <path d="M250 95 q-55 4 -67 59 q-9 44 30 69 q35 22 58 -2 q14 -15 7 -43 l-10 -45 q-4 -35 -18 -38z"/>
+ <path d="M270 202 l-7 109 q-2 32 -29 36 q-24 1 -27 -22 q-1 -20 13 -42 l25 -88" />
+ <path d="M452 95 q55 4 67 59 q9 44 -30 69 q-35 22 -58 -2 q-14 -15 -7 -43 l10 -45 q4 -35 18 -38z"/>
+ <path d="M432 202 l7 109 q2 32 29 36 q24 1 27 -22 q1 -20 -13 -42 l-25 -88"/>
+</g>
+<circle cx="240" cy="158" r="18" fill="#d9c9a7" opacity=".8"/>
+<circle cx="480" cy="158" r="18" fill="#d9c9a7" opacity=".8"/>
+<text x="360" y="510" fill="#d8bd86" text-anchor="middle" font-family="Arial,sans-serif" font-size="19" letter-spacing="5">WIRELESS AUDIO</text>
+</svg>
